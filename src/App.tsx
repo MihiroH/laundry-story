@@ -2,13 +2,11 @@ import {
   BrowserRouter as Router,
   Route,
   Link,
+  Redirect,
   RouteComponentProps
 } from "react-router-dom";
+import Categories from "./Categories"
 import './App.css';
-
-function Index() {
-  return <h2>Home</h2>
-}
 
 type TParams = { id: string };
 
@@ -19,31 +17,16 @@ function Product({ match }: RouteComponentProps<TParams>) {
 function App() {
   return (
     <Router>
-      <div>
-        <nav>
-          <ul>
-            <li>
-              <Link to="/">Home</Link>
-            </li>
-            <li>
-              <Link to="/products/1">First Product</Link>
-            </li>
-            <li>
-              <Link to="/products/2">Second Product</Link>
-            </li>
-          </ul>
-        </nav>
-
-        <Route
-          path="/"
-          exact
-          component={Index}
-        />
-        <Route
-          path="/products/:id"
-          component={Product}
-        />
-      </div>
+      <Route
+        exact
+        path="/"
+      >
+        <Redirect to="/categories" />
+      </Route>
+      <Route
+        path="/categories"
+        component={Categories}
+      />
     </Router>
   )
 }
