@@ -1,11 +1,18 @@
-import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Route,
+  Link,
+  RouteComponentProps
+} from "react-router-dom";
 import './App.css';
 
 function Index() {
   return <h2>Home</h2>
 }
 
-function Product({ match }) {
+type TParams = { id: string };
+
+function Product({ match }: RouteComponentProps<TParams>) {
   return <h2>This is a page for product with ID: {match.params.id} </h2>;
 }
 
