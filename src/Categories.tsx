@@ -1,4 +1,4 @@
-import { Link, RouteComponentProps } from "react-router-dom";
+import { Link } from "react-router-dom";
 import IconCloth from './img/icon_washing_cloth.png';
 import IconDish from './img/icon_washing_dish.png';
 import './Categories.css';
