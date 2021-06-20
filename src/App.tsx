@@ -3,13 +3,16 @@ import {
   Switch,
   Route,
   Redirect
-} from "react-router-dom";
-import Categories from "./Categories"
+} from 'react-router-dom';
+import Categories from './Categories';
+import Chat from './Chat';
+import TheHeader from './TheHeader'
 import './App.css';
 
 function App() {
   return (
     <Router>
+      <TheHeader />
       <Switch>
         <Route
           exact
@@ -21,7 +24,12 @@ function App() {
           path="/categories"
           component={Categories}
         />
+        <Route
+          path="/chat/:slug"
+          component={Chat}
+        />
       </Switch>
+      <footer className="footer"></footer>
     </Router>
   )
 }
