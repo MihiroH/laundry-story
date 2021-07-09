@@ -7,7 +7,7 @@ import {
 import Categories from './Categories';
 import Chat from './Chat';
 import TheHeader from './TheHeader'
-import './App.css';
+import './App.scoped.css';
 
 function App() {
   return (

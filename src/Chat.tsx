@@ -1,5 +1,5 @@
 import { Link, RouteComponentProps } from "react-router-dom";
-import './Chat.css';
+import './Chat.scoped.css';
 
 type TParams =  { category: string };
 

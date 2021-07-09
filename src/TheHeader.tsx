@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link, useLocation, useHistory } from 'react-router-dom';
 import categories from './utils/categories';
 import IconArrow from './img/icon_arrow_triangle.svg';
-import './TheHeader.css';
+import './TheHeader.scoped.css';
 
 function TheHeader() {
   const [title, setTitle] = useState('');

@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import categories from './utils/categories';
 import IconCloth from './img/icon_washing_cloth.png';
 import IconDish from './img/icon_washing_dish.png';
-import './Categories.css';
+import './Categories.scoped.css';
 
 function Categories() {
   return (
