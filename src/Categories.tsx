@@ -31,11 +31,11 @@ function Categories() {
             <span className="icon">
               <img
                 src={IconDish}
-                alt={categories.cloth}
+                alt={categories.dish}
                 className="icon"
               />
             </span>
-            <span className="cat">{categories.cloth}</span>
+            <span className="cat">{categories.dish}</span>
           </Link>
         </li>
       </ul>
