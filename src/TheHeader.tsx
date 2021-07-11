@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation, useHistory } from 'react-router-dom';
 import categories from './utils/categories';
+import GoogleProvider from './utils/googleProvider';
 import IconArrow from './img/icon_arrow_triangle.svg';
 import './TheHeader.scoped.css';
 
@@ -8,6 +9,7 @@ function TheHeader() {
   const [title, setTitle] = useState('');
   const location = useLocation();
   const history = useHistory();
+  const googleProvider = new GoogleProvider();
 
   useEffect(() => {
     const lastPathname = location.pathname.split('/').splice(-1)[0];
@@ -15,6 +17,11 @@ function TheHeader() {
       return;
     }
     setTitle(categories[lastPathname] ? categories[lastPathname] : 'Laundry');
+
+    googleProvider.signInRedirectResult()
+      .then(() => {
+        console.log(googleProvider.user)
+      });
   }, [location])
 
   function handleClickBackTo() {
@@ -40,6 +47,9 @@ function TheHeader() {
         </span>
       </span>
       {title}
+      <span className="user" onClick={() => googleProvider.signIn()}>
+        ログイン
+      </span>
     </header>
   )
 }
