@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import firebaseService from './utils/firebaseService';
+import firebase from 'firebase/app';
 import './Chat.scoped.css';
 
 type TParams =  { category: string };
@@ -11,29 +12,40 @@ function Chat({ match }: RouteComponentProps<TParams>) {
 
   const [isPut, setIsPut] = useState(initialIsPut);
   const [isDone, setIsDone] = useState(initialIsDone);
-  const [list, setList] = useState<Array<dataType>>([]);
+  const [list, setList] = useState<listType>([]);
 
   type dataType = {
     key: string,
     is_put: boolean,
-    is_done: boolean
+    is_done: boolean,
+    created_at: number
   };
-  type itemsType = Array<{
+  type listType = Array<dataType & {
+    year: number,
+    month: number,
+    date: number,
+    hours: number,
+    minutes: number
+  }>
+  type itemType = {
     key: string,
     val: () => dataType
-  }>;
+  };
 
-  function onDataChange(items: itemsType) {
-    const list: Array<dataType> = [];
+  function onDataChange(items: firebase.firestore.DocumentData) {
+    const list: listType = [];
 
-    items.forEach(item => {
+    items.forEach((item: itemType) => {
       const key = item.key;
       const data = item.val();
-      list.push({
-        key: key,
-        is_put: data.is_put,
-        is_done: data.is_done
-      });
+      const dateObj = new Date(data.created_at);
+      const year = dateObj.getFullYear();
+      const month = dateObj.getMonth() + 1;
+      const date = dateObj.getDate();
+      const hours = dateObj.getHours();
+      const minutes = dateObj.getMinutes();
+
+      list.push({ ...data, key, year, month, date, hours, minutes });
     });
 
     setList(list);
@@ -57,7 +69,8 @@ function Chat({ match }: RouteComponentProps<TParams>) {
   async function saveStatus() {
     const data = {
       is_put: isPut,
-      is_done: isDone
+      is_done: isDone,
+      created_at: firebase.database.ServerValue.TIMESTAMP
     };
 
     try {
@@ -83,7 +96,19 @@ function Chat({ match }: RouteComponentProps<TParams>) {
   return (
     <div>
       <div className="contents">
-        test
+        <ul className="list">
+          {list.map(item => (
+            <li key={item.key}>
+              <time dateTime={
+                `${item.year}-${item.month}-${item.date} ${item.hours}:${item.minutes}`
+              }>
+                {`${item.month}-${item.date} ${item.hours}:${item.minutes}`}
+              </time>
+              <span className="is_put">{item.is_put ? '入れた' : '入れてない'}</span>
+              <span className="is_done">{item.is_done ? '回した' : '回してない'}</span>
+            </li>
+          ))}
+        </ul>
       </div>
       <div className="foot">
         <div className="foot-btns">
@@ -94,7 +119,7 @@ function Chat({ match }: RouteComponentProps<TParams>) {
                 type="radio"
                 value="1"
                 checked={isPut}
-                onChange={(e) => changeRadio(e, 'is_put')}
+                onChange={(e) => changeRadio(e, "is_put")}
               />
               <span className="btn-text">入れた</span>
             </label>
@@ -104,7 +129,7 @@ function Chat({ match }: RouteComponentProps<TParams>) {
                 type="radio"
                 value="0"
                 checked={!isPut}
-                onChange={(e) => changeRadio(e, 'is_put')}
+                onChange={(e) => changeRadio(e, "is_put")}
               />
               <span className="btn-text">入れてない</span>
             </label>
@@ -116,7 +141,7 @@ function Chat({ match }: RouteComponentProps<TParams>) {
                 type="radio"
                 value="1"
                 checked={isDone}
-                onChange={(e) => changeRadio(e, 'is_done')}
+                onChange={(e) => changeRadio(e, "is_done")}
               />
               <span className="btn-text">回した</span>
             </label>
@@ -126,7 +151,7 @@ function Chat({ match }: RouteComponentProps<TParams>) {
                 type="radio"
                 value="0"
                 checked={!isDone}
-                onChange={(e) => changeRadio(e, 'is_done')}
+                onChange={(e) => changeRadio(e, "is_done")}
               />
               <span className="btn-text">回してない</span>
             </label>
@@ -137,7 +162,7 @@ function Chat({ match }: RouteComponentProps<TParams>) {
         </div>
       </div>
     </div>
-  )
+  );
 }
 
 export default Chat;
