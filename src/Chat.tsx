@@ -99,14 +99,24 @@ function Chat({ match }: RouteComponentProps<TParams>) {
       <div className="contents">
         <ul className="list">
           {list.map(item => (
-            <li key={item.key}>
-              <time dateTime={
-                `${item.year}-${item.month}-${item.date} ${item.hours}:${item.minutes}`
-              }>
-                {`${item.month}-${item.date} ${item.hours}:${item.minutes}`}
+            <li key={item.key} className="item">
+              <p className="msg">
+                <span className={[item.is_put ? 'is-active' : '', 'status'].join(' ')}>
+                  {item.is_put ? '入れた' : '入れてない'}
+                </span>
+                <span className="separate">|</span>
+                <span className={[item.is_done ? 'is-active' : '', 'status'].join(' ')}>
+                  {item.is_done ? '回した' : '回してない'}
+                </span>
+              </p>
+              <time
+                dateTime={
+                  `${item.year}-${item.month}-${item.date} ${item.hours}:${item.minutes}`
+                }
+                className="time"
+              >
+                {`${item.month}/${item.date} ${item.hours}:${item.minutes}`}
               </time>
-              <span className="is_put">{item.is_put ? '入れた' : '入れてない'}</span>
-              <span className="is_done">{item.is_done ? '回した' : '回してない'}</span>
             </li>
           ))}
         </ul>
