@@ -12,31 +12,31 @@ function Chat({ match }: RouteComponentProps<TParams>) {
 
   const [isPut, setIsPut] = useState(initialIsPut);
   const [isDone, setIsDone] = useState(initialIsDone);
-  const [list, setList] = useState<listType>([]);
+  const [list, setList] = useState<ListType>([]);
   const chatService = new ChatService(match.params.slug);
 
-  type dataType = {
+  type DataType = {
     key: string,
     is_put: boolean,
     is_done: boolean,
     created_at: number
   };
-  type listType = Array<dataType & {
+  type ListType = Array<DataType & {
     year: number,
     month: number,
     date: number,
     hours: number,
     minutes: number
   }>
-  type itemType = {
+  type ItemType = {
     key: string,
-    val: () => dataType
+    val: () => DataType
   };
 
   function onDataChange(items: firebase.firestore.DocumentData) {
-    const list: listType = [];
+    const list: ListType = [];
 
-    items.forEach((item: itemType) => {
+    items.forEach((item: ItemType) => {
       const key = item.key;
       const data = item.val();
       const dateObj = new Date(data.created_at);
