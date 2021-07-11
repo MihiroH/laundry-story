@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
-import firebaseService from './utils/firebaseService';
+import ChatService from './utils/chatService';
 import firebase from 'firebase/app';
 import './Chat.scoped.css';
 
-type TParams =  { category: string };
+type TParams =  { slug: string };
 
 function Chat({ match }: RouteComponentProps<TParams>) {
   const initialIsPut = true;
@@ -13,6 +13,7 @@ function Chat({ match }: RouteComponentProps<TParams>) {
   const [isPut, setIsPut] = useState(initialIsPut);
   const [isDone, setIsDone] = useState(initialIsDone);
   const [list, setList] = useState<listType>([]);
+  const chatService = new ChatService(match.params.slug);
 
   type dataType = {
     key: string,
@@ -74,7 +75,7 @@ function Chat({ match }: RouteComponentProps<TParams>) {
     };
 
     try {
-      await firebaseService.create(data)
+      await chatService.create(data)
       setIsPut(initialIsPut);
       setIsDone(initialIsDone);
     } catch (e) {
@@ -86,10 +87,10 @@ function Chat({ match }: RouteComponentProps<TParams>) {
     setIsPut(true);
     setIsDone(true);
 
-    firebaseService.getAll().on('value', onDataChange);
+    chatService.getAll().on('value', onDataChange);
 
     return () => {
-      firebaseService.getAll().off('value', onDataChange);
+      chatService.getAll().off('value', onDataChange);
     };
   }, []);
 
