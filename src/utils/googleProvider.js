@@ -55,8 +55,7 @@ class GoogleProvider {
 
   async signOut() {
     try {
-      const result = await firebase.auth().signOut()
-      console.log({ result })
+      await firebase.auth().signOut()
     } catch (error) {
       this.errorCode = error.code;
       this.errorMessage = error.message;
