@@ -2,14 +2,19 @@ import { useState, useEffect } from 'react';
 import { Link, useLocation, useHistory } from 'react-router-dom';
 import categories from './utils/categories';
 import GoogleProvider from './utils/googleProvider';
+import firebase from 'firebase/app';
 import IconArrow from './img/icon_arrow_triangle.svg';
+import IconSignIn from './img/icon_login_box.svg';
+import IconSignOut from './img/icon_logout_box.svg';
 import './TheHeader.scoped.css';
 
 function TheHeader() {
-  const [title, setTitle] = useState('');
   const location = useLocation();
   const history = useHistory();
   const googleProvider = new GoogleProvider();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [user, setUser] = useState<firebase.User | null>(null);
+  const [title, setTitle] = useState('');
 
   useEffect(() => {
     const lastPathname = location.pathname.split('/').splice(-1)[0];
@@ -18,10 +23,10 @@ function TheHeader() {
     }
     setTitle(categories[lastPathname] ? categories[lastPathname] : 'Laundry');
 
-    googleProvider.signInRedirectResult()
-      .then(() => {
-        console.log(googleProvider.user)
-      });
+    googleProvider.onAuthStateChanged((user: firebase.User | null) => {
+      setIsLoggedIn(user ? true : false);
+      setUser(user);
+    })
   }, [location])
 
   function handleClickBackTo() {
@@ -47,9 +52,21 @@ function TheHeader() {
         </span>
       </span>
       {title}
-      <span className="user" onClick={() => googleProvider.signIn()}>
-        ログイン
-      </span>
+      <div className="user">
+        {isLoggedIn && user && user.photoURL &&
+          <span className="user_icon">
+            <img src={user.photoURL} alt="プロフィール" />
+          </span>
+        }
+        {isLoggedIn
+          ? <span className="sign_out" onClick={() => googleProvider.signOut()}>
+              <img src={IconSignOut} alt="ログアウト" />
+            </span>
+          : <span className="sign_in" onClick={() => googleProvider.signIn()}>
+              <img src={IconSignIn} alt="ログイン" />
+            </span>
+        }
+      </div>
     </header>
   )
 }

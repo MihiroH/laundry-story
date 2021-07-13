@@ -52,6 +52,22 @@ class GoogleProvider {
       // this.credential = error.credential;
     }
   }
+
+  async signOut() {
+    try {
+      const result = await firebase.auth().signOut()
+      console.log({ result })
+    } catch (error) {
+      this.errorCode = error.code;
+      this.errorMessage = error.message;
+    }
+  }
+
+  onAuthStateChanged(callback) {
+    firebase.auth().onAuthStateChanged(user => {
+      return callback(user || null);
+    });
+  }
 }
 
 export default GoogleProvider;
