@@ -4,9 +4,12 @@ import ChatService from './utils/chatService';
 import firebase from 'firebase/app';
 import './Chat.scoped.css';
 
-type TParams =  { slug: string };
+type Props = RouteComponentProps<{ slug: string }> & {
+  user: firebase.User | null,
+  isEqualCurrentUserUid: (user: firebase.User, uid: string) => boolean
+}
 
-function Chat({ match }: RouteComponentProps<TParams>) {
+function Chat({ match, user, isEqualCurrentUserUid }: Props) {
   const initialIsPut = true;
   const initialIsDone = true;
 
@@ -19,6 +22,8 @@ function Chat({ match }: RouteComponentProps<TParams>) {
     key: string,
     is_put: boolean,
     is_done: boolean,
+    user_uid: string,
+    user_photo_url?: string,
     created_at: number
   };
   type ListType = Array<DataType & {
@@ -26,7 +31,8 @@ function Chat({ match }: RouteComponentProps<TParams>) {
     month: number,
     date: number,
     hours: number,
-    minutes: number
+    minutes: number,
+    isCurrentUser: boolean
   }>
   type ItemType = {
     key: string,
@@ -45,8 +51,11 @@ function Chat({ match }: RouteComponentProps<TParams>) {
       const date = dateObj.getDate();
       const hours = dateObj.getHours();
       const minutes = dateObj.getMinutes();
+      const isCurrentUser = user ? isEqualCurrentUserUid(user, data.user_uid) : false;
 
-      list.push({ ...data, key, year, month, date, hours, minutes });
+      if (data.user_uid) {
+        list.push({ ...data, key, year, month, date, hours, minutes, isCurrentUser });
+      }
     });
 
     setList(list);
@@ -71,6 +80,8 @@ function Chat({ match }: RouteComponentProps<TParams>) {
     const data = {
       is_put: isPut,
       is_done: isDone,
+      user_uid: user ? user.uid : '',
+      user_photo_url: user ? user.photoURL : '',
       created_at: firebase.database.ServerValue.TIMESTAMP
     };
 
@@ -99,16 +110,23 @@ function Chat({ match }: RouteComponentProps<TParams>) {
       <div className="contents">
         <ul className="list">
           {list.map(item => (
-            <li key={item.key} className="item">
-              <p className="msg">
-                <span className={[item.is_put ? 'is-active' : '', 'status'].join(' ')}>
-                  {item.is_put ? '入れた' : '入れてない'}
-                </span>
-                <span className="separate">|</span>
-                <span className={[item.is_done ? 'is-active' : '', 'status'].join(' ')}>
-                  {item.is_done ? '回した' : '回してない'}
-                </span>
-              </p>
+            <li key={item.key} className={[item.isCurrentUser ? 'is-mine' : '', 'item'].join(' ')}>
+              <div className="user">
+                {!item.isCurrentUser &&
+                  <span className="user_icon">
+                    <img src={item.user_photo_url} />
+                  </span>
+                }
+                <p className="msg">
+                  <span className={[item.is_put ? 'is-active' : '', 'status'].join(' ')}>
+                    {item.is_put ? '入れた' : '入れてない'}
+                  </span>
+                  <span className="separate">|</span>
+                  <span className={[item.is_done ? 'is-active' : '', 'status'].join(' ')}>
+                    {item.is_done ? '回した' : '回してない'}
+                  </span>
+                </p>
+              </div>
               <time
                 dateTime={
                   `${item.year}-${item.month}-${item.date} ${item.hours}:${item.minutes}`

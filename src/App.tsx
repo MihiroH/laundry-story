@@ -53,7 +53,13 @@ function App() {
         />
         <Route
           path="/chat/:slug"
-          component={Chat}
+          render={props =>
+            <Chat
+              {...props}
+              user={user}
+              isEqualCurrentUserUid={(user, uid) => googleProvider.isEqualCurrentUserUid(user, uid)}
+            />
+          }
         />
       </Switch>
       <footer className="footer"></footer>

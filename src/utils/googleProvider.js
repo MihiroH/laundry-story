@@ -62,9 +62,20 @@ class GoogleProvider {
     }
   }
 
+  isEqualCurrentUserUid(user, uid) {
+    if (!uid) {
+      return false;
+    }
+    if (!user) {
+      return false;
+    }
+    return user.uid === uid;
+  }
+
   onAuthStateChanged(callback) {
     firebase.auth().onAuthStateChanged(user => {
-      return callback(user || null);
+      this.user = user;
+      callback(user || null);
     });
   }
 }
