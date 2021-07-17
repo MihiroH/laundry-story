@@ -1,5 +1,5 @@
 .contents {
-  padding-top: 49px;
+  padding: 49px 0 130px;
 }
 
 .item {
@@ -60,7 +60,7 @@
 }
 
 .foot {
-  position: absolute;
+  position: fixed;
   bottom: 0;
   width: 100%;
   z-index: 3;
