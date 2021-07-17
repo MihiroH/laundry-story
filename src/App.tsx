@@ -21,14 +21,6 @@ function App() {
     googleProvider.onAuthStateChanged((user: firebase.User | null) => {
       setIsLoggedIn(user ? true : false);
       setUser(user);
-
-      if (isLoggedIn) {
-        return;
-      }
-      if (window.location.pathname === '/categories') {
-        return;
-      }
-      window.location.pathname = '/';
     })
   }, [])
 

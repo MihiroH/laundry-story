@@ -37,6 +37,14 @@ function TheHeader({ isLoggedIn, user, onClickSignIn, onClickSignOut }: Props) {
       return;
     }
     setTitle(categories[lastPathname] ? categories[lastPathname] : 'Laundry');
+
+    if (isLoggedIn) {
+      return;
+    }
+    if (location.pathname === '/categories') {
+      return;
+    }
+    history.push('/');
   }, [location]);
 
   return (
