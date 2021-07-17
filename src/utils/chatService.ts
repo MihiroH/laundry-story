@@ -1,7 +1,9 @@
-import firebase from '../plugins/firebase';
+import firebase, { DocumentDataType } from '../plugins/firebase';
 
 class ChatService {
-  constructor(refName) {
+  db;
+
+  constructor(refName: string) {
     const root = firebase.ref('chat');
     if (refName) {
       this.db = root.child(refName);
@@ -14,15 +16,15 @@ class ChatService {
     return this.db;
   }
 
-  create(data) {
+  create(data: DocumentDataType) {
     return this.db.push(data);
   }
 
-  update(key, data) {
+  update(key: string, data: DocumentDataType) {
     return this.db.child(key).update(data);
   }
 
-  remove(key) {
+  remove(key: string) {
     return this.db.child(key).remove();
   }
 

@@ -1,7 +1,15 @@
+import { UserType } from '../plugins/firebase';
 import firebase from 'firebase/app';
 import 'firebase/auth';
 
 class GoogleProvider {
+  provider;
+  errorCode: string = '';
+  errorMessage: string = '';
+  user: UserType = null;
+  email: string = '';
+  token: string | undefined = '';
+
   constructor() {
     this.provider = new firebase.auth.GoogleAuthProvider();
     // this.provider.addScope('https://www.googleapis.com/auth/contacts.readonly');
@@ -12,22 +20,11 @@ class GoogleProvider {
 
   async signIn() {
     try {
-      const result = await firebase.auth().signInWithRedirect(this.provider);
-      /** @type {firebase.auth.OAuthCredential} */
-      const credential = result.credential;
-
-      // This gives you a Google Access Token. You can use it to access the Google API.
-      this.token = credential.accessToken;
-      // The signed-in user info.
-      this.user = result.user;
+      await firebase.auth().signInWithRedirect(this.provider);
     } catch (error) {
-      // Handle Errors here.
       this.errorCode = error.code;
       this.errorMessage = error.message;
-      // The email of the user's account used.
       this.email = error.email;
-      // The firebase.auth.AuthCredential type that was used.
-      // const credential = error.credential;
     }
   }
 
@@ -35,34 +32,28 @@ class GoogleProvider {
     try {
       const result = await firebase.auth().getRedirectResult();
       if (result.credential) {
-        /** @type {firebase.auth.OAuthCredential} */
-        const credential = result.credential;
-        // This gives you a Google Access Token. You can use it to access the Google API.
+        const credential: firebase.auth.OAuthCredential = result.credential;
         this.token = credential.accessToken;
       }
-      // The signed-in user info.
       this.user = result.user;
     } catch (error) {
-      // Handle Errors here.
       this.errorCode = error.code;
       this.errorMessage = error.message;
-      // The email of the user's account used.
       this.email = error.email;
-      // The firebase.auth.AuthCredential type that was used.
-      // this.credential = error.credential;
     }
   }
 
   async signOut() {
     try {
-      await firebase.auth().signOut()
+      await firebase.auth().signOut();
+      window.location.pathname = '/';
     } catch (error) {
       this.errorCode = error.code;
       this.errorMessage = error.message;
     }
   }
 
-  isEqualCurrentUserUid(user, uid) {
+  isEqualCurrentUserUid(user: UserType, uid: string) {
     if (!uid) {
       return false;
     }
@@ -72,7 +63,7 @@ class GoogleProvider {
     return user.uid === uid;
   }
 
-  onAuthStateChanged(callback) {
+  onAuthStateChanged(callback: (user: firebase.User | null) => void) {
     firebase.auth().onAuthStateChanged(user => {
       this.user = user;
       callback(user || null);

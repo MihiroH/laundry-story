@@ -18,7 +18,7 @@ function App() {
   const [user, setUser] = useState<firebase.User | null>(null);
 
   useEffect(() => {
-    googleProvider.onAuthStateChanged((user: firebase.User | null) => {
+    googleProvider.onAuthStateChanged(user => {
       setIsLoggedIn(user ? true : false);
       setUser(user);
     })

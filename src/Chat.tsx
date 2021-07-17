@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
+import { UserType, DocumentDataType, TIMESTAMP } from './plugins/firebase';
 import ChatService from './utils/chatService';
-import firebase from 'firebase/app';
 import './Chat.scoped.css';
 
 type Props = RouteComponentProps<{ slug: string }> & {
-  user: firebase.User | null,
-  isEqualCurrentUserUid: (user: firebase.User, uid: string) => boolean
+  user: UserType,
+  isEqualCurrentUserUid: (user: UserType, uid: string) => boolean
 }
 
 function Chat({ match, user, isEqualCurrentUserUid }: Props) {
@@ -39,7 +39,7 @@ function Chat({ match, user, isEqualCurrentUserUid }: Props) {
     val: () => DataType
   };
 
-  function onDataChange(items: firebase.firestore.DocumentData) {
+  function onDataChange(items: DocumentDataType) {
     const list: ListType = [];
 
     items.forEach((item: ItemType) => {
@@ -59,6 +59,7 @@ function Chat({ match, user, isEqualCurrentUserUid }: Props) {
     });
 
     setList(list);
+    window.scrollTo(0, document.body.scrollHeight);
   };
 
   function changeRadio(e: React.ChangeEvent<HTMLInputElement>, radioName: string) {
@@ -82,7 +83,7 @@ function Chat({ match, user, isEqualCurrentUserUid }: Props) {
       is_done: isDone,
       user_uid: user ? user.uid : '',
       user_photo_url: user ? user.photoURL : '',
-      created_at: firebase.database.ServerValue.TIMESTAMP
+      created_at: TIMESTAMP
     };
 
     try {
@@ -114,7 +115,7 @@ function Chat({ match, user, isEqualCurrentUserUid }: Props) {
               <div className="user">
                 {!item.isCurrentUser &&
                   <span className="user_icon">
-                    <img src={item.user_photo_url} />
+                    <img src={item.user_photo_url} alt="プロフィール画像" />
                   </span>
                 }
                 <p className="msg">
