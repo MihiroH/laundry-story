@@ -1,0 +1,153 @@
+.contents {
+  padding: 49px 0 130px;
+}
+
+.item {
+  padding: 8px;
+  display: table;
+}
+
+.item.is-mine {
+  margin-left: auto;
+}
+
+.item.is-mine .msg {
+  background: rgba(92,147,187,0.17);
+}
+
+.item.is-mine .time {
+  margin-left: 0;
+}
+
+.user {
+  display: flex;
+  align-items: center;
+}
+
+.user_icon {
+  display: block;
+  width: 29px;
+  border-radius: 50%;
+  overflow: hidden;
+  margin-right: 5px;
+}
+
+.user_icon img {
+  display: block;
+}
+
+.msg {
+  border-radius: 20px;
+  background: rgba(207, 220, 230, .7);
+  font-size: 12px;
+  padding: 10px 14px;
+}
+
+.status.is-active {
+  font-weight: bold;
+}
+
+.separate {
+  margin: 0 10px;
+}
+
+.time {
+  font-size: 10px;
+  margin-left: auto;
+  padding: 7px 5px 0;
+  display: table;
+  color: var(--c-gray);
+}
+
+.foot {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  z-index: 3;
+  padding: 8px;
+  background: var(--c-white);
+  box-shadow: 0 0 10px var(--c-bg-blue);
+}
+
+.foot-btns {
+  display: flex;
+  justify-content: space-between;
+  align-items: stretch;
+}
+
+.btns {
+  width: 39%;
+}
+
+.btns.btns--single {
+  width: 80%;
+}
+
+.btn_submit {
+  width: 18%;
+  background: var(--c-dark);
+  border-radius: 3px;
+  border: none;
+  color: var(--c-white);
+  font-weight: bold;
+}
+
+.btn {
+  display: block;
+}
+
+.btn:nth-child(2) {
+  margin-top: 8px;
+}
+
+.btn-text {
+  background: #cfdce6;
+  border-radius: 3px;
+  display: block;
+  padding: 16px;
+  text-align: center;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+input {
+  display: none;
+}
+
+input:checked + .btn-text {
+  background: var(--c-blue-lighter);
+  color: var(--c-white);
+}
+
+select {
+  border: none;
+  background-color: transparent;
+  background: var(--c-blue-lighter);
+  color: var(--c-white);
+  border-radius: 3px;
+  padding: 16px;
+  text-align: center;
+  font-weight: bold;
+  font-size: 14px;
+  width: 100%;
+  display: block;
+  outline: none;
+}
+
+.selectbox {
+  position: relative;
+  width: 80%;
+}
+
+.selectbox::after {
+  position: absolute;
+  top: 50%;
+  right: 16px;
+  transform: translateY(-75%) rotate(45deg);
+  display: block;
+  width: 10px;
+  height: 10px;
+  border-right: 2px solid var(--c-white);
+  border-bottom: 2px solid var(--c-white);
+  content: '';
+}
