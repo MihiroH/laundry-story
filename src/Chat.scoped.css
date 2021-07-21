@@ -84,8 +84,6 @@
 }
 
 .btn_submit {
-  --web-kit-appearance: none;
-  appearance: none;
   width: 18%;
   background: var(--c-dark);
   border-radius: 3px;
@@ -122,8 +120,6 @@ input:checked + .btn-text {
 }
 
 select {
-  --web-kit-appearance: none;
-  appearance: none;
   border: none;
   background-color: transparent;
   background: var(--c-blue-lighter);
