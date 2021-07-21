@@ -36,7 +36,7 @@ function TheHeader({ isLoggedIn, user, onClickSignIn, onClickSignOut }: Props) {
     if (!lastPathname) {
       return;
     }
-    setTitle(categories[lastPathname] ? categories[lastPathname] : 'Laundry');
+    setTitle(categories[lastPathname] ? categories[lastPathname].name : 'Laundry');
 
     if (isLoggedIn) {
       return;

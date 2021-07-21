@@ -1,43 +1,28 @@
 import { Link } from "react-router-dom";
 import categories from './utils/categories';
-import IconCloth from './img/icon_washing_cloth.png';
-import IconDish from './img/icon_washing_dish.png';
 import './Categories.scoped.css';
 
 function Categories() {
   return (
     <nav className="contents">
       <ul>
-        <li className="item">
-          <Link
-            to="/chat/cloth"
-            className="anchor"
-          >
-            <span className="icon">
-              <img
-                src={IconCloth}
-                alt={categories.cloth}
-                className="icon"
-              />
-            </span>
-            <span className="cat">{categories.cloth}</span>
-          </Link>
-        </li>
-        <li className="item">
-          <Link
-            to="/chat/dish"
-            className="anchor"
-          >
-            <span className="icon">
-              <img
-                src={IconDish}
-                alt={categories.dish}
-                className="icon"
-              />
-            </span>
-            <span className="cat">{categories.dish}</span>
-          </Link>
-        </li>
+        {Object.entries(categories).map(([key, category]) => (
+          <li key={key} className="item">
+            <Link
+              to={`/chat/${key}`}
+              className="anchor"
+            >
+              <span className="icon">
+                <img
+                  src={category.icon}
+                  alt={category.name}
+                  className="icon"
+                />
+              </span>
+              <span className="cat">{category.name}</span>
+            </Link>
+          </li>
+        ))}
       </ul>
     </nav>
   )

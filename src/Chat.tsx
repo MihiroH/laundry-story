@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
-import { RouteComponentProps } from 'react-router-dom';
+import { useLocation, RouteComponentProps } from 'react-router-dom';
 import { UserType, DocumentDataType, TIMESTAMP } from './plugins/firebase';
+import categories from './utils/categories';
 import ChatService from './utils/chatService';
 import './Chat.scoped.css';
 
@@ -10,18 +11,34 @@ type Props = RouteComponentProps<{ slug: string }> & {
 }
 
 function Chat({ match, user, isEqualCurrentUserUid }: Props) {
-  const initialIsPut = true;
-  const initialIsDone = true;
+  type StatusType = { [key: string]: number };
+  type CurrentType = { category: string, status: StatusType };
 
-  const [isPut, setIsPut] = useState(initialIsPut);
-  const [isDone, setIsDone] = useState(initialIsDone);
-  const [list, setList] = useState<ListType>([]);
+  const location = useLocation();
   const chatService = new ChatService(match.params.slug);
+  const initialCurrent = (): CurrentType => {
+    const category = location.pathname.split('/').splice(-1)[0];
+    if (!category) {
+      return { category: '', status: {} };
+    }
+
+    const status = Object.keys(categories[category].status).reduce(
+      (all: StatusType, key: string) => {
+        all[key] = 1;
+        return all;
+      },
+      {}
+    )
+    return { category, status }
+  }
+
+  const [current, setCurrent] = useState(initialCurrent());
+  const [list, setList] = useState<ListType>([]);
 
   type DataType = {
     key: string,
-    is_put: boolean,
-    is_done: boolean,
+    is_put?: number,
+    is_done?: number,
     user_uid: string,
     user_photo_url?: string,
     created_at: number
@@ -62,42 +79,39 @@ function Chat({ match, user, isEqualCurrentUserUid }: Props) {
     window.scrollTo(0, document.body.scrollHeight);
   };
 
-  function changeRadio(e: React.ChangeEvent<HTMLInputElement>, radioName: string) {
-    const value = !!Number(e.currentTarget.value);
+  type ChangeEventType = React.ChangeEvent<HTMLInputElement | HTMLSelectElement>;
+  function changeStatus(e: ChangeEventType, status: string) {
+    const value = Number(e.currentTarget.value);
+    console.log({ value, beforeV: e.currentTarget.value })
 
-    switch (radioName) {
-      case 'is_put': {
-        setIsPut(value);
-        return;
+    setCurrent(prev => ({
+      ...prev,
+      status: {
+        ...prev.status,
+        [status]: value
       }
-      case 'is_done': {
-        setIsDone(value);
-        return;
-      }
-    }
+    }));
   }
 
   async function saveStatus() {
-    const data = {
-      is_put: isPut,
-      is_done: isDone,
+    const data: DocumentDataType = {
       user_uid: user ? user.uid : '',
       user_photo_url: user ? user.photoURL : '',
       created_at: TIMESTAMP
     };
+    Object.entries(current.status).forEach(([key, value]) => {
+      data[key] = value;
+    });
 
     try {
       await chatService.create(data)
-      setIsPut(initialIsPut);
-      setIsDone(initialIsDone);
     } catch (e) {
       console.log(e);
     }
   };
 
   useEffect(() => {
-    setIsPut(true);
-    setIsDone(true);
+    setCurrent(initialCurrent());
 
     chatService.getAll().on('value', onDataChange);
 
@@ -119,13 +133,32 @@ function Chat({ match, user, isEqualCurrentUserUid }: Props) {
                   </span>
                 }
                 <p className="msg">
-                  <span className={[item.is_put ? 'is-active' : '', 'status'].join(' ')}>
-                    {item.is_put ? '入れた' : '入れてない'}
-                  </span>
-                  <span className="separate">|</span>
-                  <span className={[item.is_done ? 'is-active' : '', 'status'].join(' ')}>
-                    {item.is_done ? '回した' : '回してない'}
-                  </span>
+                  {
+                    current.category &&
+                    categories[current.category] &&
+                    Object.entries(categories[current.category].status).map(([key, status], index) => {
+                      if (categories[current.category].formType === 'radio') {
+                        return Object.entries(status).map(([text, value]) => {
+                          if (item[key as keyof DataType] !== value) return <></>
+                          return (
+                            <>
+                              {index ? <span className="separate">|</span> : <></>}
+                              <span className={[item[key as keyof DataType] === 1 ? 'is-active' : '', 'status'].join(' ')}>{text}</span>
+                            </>
+                          )
+                        })
+                      }
+                      if (categories[current.category].formType === 'select') {
+                        return Object.entries(status).map(([text, value], index) => {
+                          if (item[key as keyof DataType] !== value) return <></>
+                          return (
+                            <span className={[item[key as keyof DataType] === value ? 'is-active' : '', 'status'].join(' ')}>{text}</span>
+                          )
+                        })
+                      }
+                      return <></>
+                    })
+                  }
                 </p>
               </div>
               <time
@@ -142,50 +175,44 @@ function Chat({ match, user, isEqualCurrentUserUid }: Props) {
       </div>
       <div className="foot">
         <div className="foot-btns">
-          <div className="btns">
-            <label className="btn">
-              <input
-                name="is_put"
-                type="radio"
-                value="1"
-                checked={isPut}
-                onChange={(e) => changeRadio(e, "is_put")}
-              />
-              <span className="btn-text">入れた</span>
-            </label>
-            <label className="btn">
-              <input
-                name="is_put"
-                type="radio"
-                value="0"
-                checked={!isPut}
-                onChange={(e) => changeRadio(e, "is_put")}
-              />
-              <span className="btn-text">入れてない</span>
-            </label>
-          </div>
-          <div className="btns">
-            <label className="btn">
-              <input
-                name="is_done"
-                type="radio"
-                value="1"
-                checked={isDone}
-                onChange={(e) => changeRadio(e, "is_done")}
-              />
-              <span className="btn-text">回した</span>
-            </label>
-            <label className="btn">
-              <input
-                name="is_done"
-                type="radio"
-                value="0"
-                checked={!isDone}
-                onChange={(e) => changeRadio(e, "is_done")}
-              />
-              <span className="btn-text">回してない</span>
-            </label>
-          </div>
+          {
+            current.category &&
+            categories[current.category] &&
+            Object.entries(categories[current.category].status).map(([key, status]) => {
+              if (categories[current.category].formType === 'radio') return (
+                <div
+                  key={key}
+                  className={
+                    [Object.keys(status).length === 1 ? 'btns--single' : '', 'btns'].join(' ')
+                  }
+                >
+                  {Object.entries(status).map(([item, value], index) => (
+                    <label key={index} className="btn">
+                      <input
+                        name={key}
+                        type="radio"
+                        value={value}
+                        checked={value === current.status[key]}
+                        onChange={e => changeStatus(e, key)}
+                      />
+                      { value === current.status[key] }
+                      <span className="btn-text">{item}</span>
+                    </label>
+                  ))}
+                </div>
+              )
+              if (categories[current.category].formType === 'select') return (
+                <div key={key} className="selectbox">
+                  <select name={key} onChange={e => changeStatus(e, key)}>
+                    {Object.entries(status).map(([item, value], index) => (
+                      <option key={index} value={value}>{item}</option>
+                    ))}
+                  </select>
+                </div>
+              )
+              return '';
+            })
+          }
           <button type="button" className="btn_submit" onClick={saveStatus}>
             送信
           </button>

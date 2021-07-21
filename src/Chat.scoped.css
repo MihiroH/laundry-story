@@ -79,10 +79,15 @@
   width: 39%;
 }
 
+.btns.btns--single {
+  width: 80%;
+}
+
 .btn_submit {
   --web-kit-appearance: none;
+  appearance: none;
   width: 18%;
-  background: #ff0033;
+  background: var(--c-dark);
   border-radius: 3px;
   border: none;
   color: var(--c-white);
@@ -114,4 +119,39 @@ input {
 input:checked + .btn-text {
   background: var(--c-blue-lighter);
   color: var(--c-white);
+}
+
+select {
+  --web-kit-appearance: none;
+  appearance: none;
+  border: none;
+  background-color: transparent;
+  background: var(--c-blue-lighter);
+  color: var(--c-white);
+  border-radius: 3px;
+  padding: 16px;
+  text-align: center;
+  font-weight: bold;
+  font-size: 14px;
+  width: 100%;
+  display: block;
+  outline: none;
+}
+
+.selectbox {
+  position: relative;
+  width: 80%;
+}
+
+.selectbox::after {
+  position: absolute;
+  top: 50%;
+  right: 16px;
+  transform: translateY(-75%) rotate(45deg);
+  display: block;
+  width: 10px;
+  height: 10px;
+  border-right: 2px solid var(--c-white);
+  border-bottom: 2px solid var(--c-white);
+  content: '';
 }
