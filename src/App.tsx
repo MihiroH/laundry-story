@@ -41,7 +41,9 @@ function App() {
         </Route>
         <Route
           path="/categories"
-          component={Categories}
+          render={props =>
+            <Categories {...props} isLoggedIn={isLoggedIn} />
+          }
         />
         <Route
           path="/chat/:slug"

@@ -1,16 +1,31 @@
-import { Link } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import categories from './utils/categories';
 import './Categories.scoped.css';
 
-function Categories() {
+type Props = {
+  isLoggedIn: boolean
+}
+
+function Categories({ isLoggedIn }: Props) {
+  const history = useHistory();
+
+  const goTo = (path: string) => {
+    if (!isLoggedIn) {
+      alert('サインインしてください');
+      return;
+    }
+    history.push(path);
+  }
+
   return (
     <nav className="contents">
       <ul>
         {Object.entries(categories).map(([key, category]) => (
           <li key={key} className="item">
-            <Link
-              to={`/chat/${key}`}
-              className="anchor"
+            <button
+              type="button"
+              className="btn"
+              onClick={() => goTo(`/chat/${key}`)}
             >
               <span className="icon">
                 <img
@@ -20,7 +35,7 @@ function Categories() {
                 />
               </span>
               <span className="cat">{category.name}</span>
-            </Link>
+            </button>
           </li>
         ))}
       </ul>

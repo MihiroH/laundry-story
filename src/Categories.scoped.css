@@ -6,7 +6,7 @@
   margin-top: 10px;
 }
 
-.anchor {
+.btn {
   box-shadow: 0 6px 10px var(--c-bg-blue);
   border-radius: 10px;
   background: var(--c-white);
@@ -14,6 +14,9 @@
   padding: 12px;
   display: flex;
   align-items: center;
+  border: none;
+  width: 100%;
+  outline: none;
 }
 
 .icon {
