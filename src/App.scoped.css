@@ -1,0 +1,10 @@
+.footer {
+  width: 100%;
+  position: fixed;
+  left: 0;
+  background: var(--c-blue-lighter);
+  bottom: 0;
+  box-shadow: 0 0 10px var(--c-bg-blue);
+  border-radius: 10px 10px 0 0;
+  height: 30px;
+}

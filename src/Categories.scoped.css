@@ -1,0 +1,30 @@
+.contents {
+  padding: 58px 10px 30px;
+}
+
+.item + .item {
+  margin-top: 10px;
+}
+
+.btn {
+  box-shadow: 0 6px 10px var(--c-bg-blue);
+  border-radius: 10px;
+  background: var(--c-white);
+  display: block;
+  padding: 12px;
+  display: flex;
+  align-items: center;
+  border: none;
+  width: 100%;
+  outline: none;
+}
+
+.icon {
+  width: 30px;
+}
+
+.cat {
+  margin-left: 12px;
+  font-size: 14px;
+  font-weight: bold;
+}

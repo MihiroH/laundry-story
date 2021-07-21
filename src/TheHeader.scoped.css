@@ -1,0 +1,76 @@
+.header {
+  width: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background: var(--c-blue-lighter);
+  box-shadow: 0 0 10px var(--c-border-blue);
+  border-radius: 0 0 10px 10px;
+  padding: 12px 0;
+  text-align: center;
+  font-weight: bold;
+  font-size: 24px;
+  color: var(--c-white);
+  z-index: 10;
+}
+
+.back_to {
+  position: absolute;
+  top: 50%;
+  left: 6px;
+  z-index: 1;
+  transform: translateY(-50%);
+  width: 35px;
+  height: 35px;
+  display: block;
+}
+
+.back_to.is-hidden {
+  display: none;
+}
+
+.back_to-inner {
+  width: 15px;
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  margin: auto;
+  transform: translateY(-50%) rotate(-90deg);
+}
+
+.back_to img {
+  display: block;
+}
+
+.user {
+  position: absolute;
+  top: 50%;
+  right: 12px;
+  transform: translateY(-50%);
+}
+
+.user_icon {
+  display: inline-block;
+  vertical-align: middle;
+  width: 28px;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+.user_icon img {
+  display: block;
+}
+
+.sign_in,
+.sign_out {
+  display: inline-block;
+  vertical-align: middle;
+  width: 30px;
+  margin-left: 12px;
+}
+
+.sign_in img,
+.sign_out img {
+  display: block;
+}
