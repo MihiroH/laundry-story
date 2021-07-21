@@ -82,7 +82,6 @@ function Chat({ match, user, isEqualCurrentUserUid }: Props) {
   type ChangeEventType = React.ChangeEvent<HTMLInputElement | HTMLSelectElement>;
   function changeStatus(e: ChangeEventType, status: string) {
     const value = Number(e.currentTarget.value);
-    console.log({ value, beforeV: e.currentTarget.value })
 
     setCurrent(prev => ({
       ...prev,
@@ -139,20 +138,20 @@ function Chat({ match, user, isEqualCurrentUserUid }: Props) {
                     Object.entries(categories[current.category].status).map(([key, status], index) => {
                       if (categories[current.category].formType === 'radio') {
                         return Object.entries(status).map(([text, value]) => {
-                          if (item[key as keyof DataType] !== value) return <></>
+                          if (item[key as keyof DataType] !== value) return ''
                           return (
-                            <>
+                            <span key={`${index}_${text}`}>
                               {index ? <span className="separate">|</span> : <></>}
                               <span className={[item[key as keyof DataType] === 1 ? 'is-active' : '', 'status'].join(' ')}>{text}</span>
-                            </>
+                            </span>
                           )
                         })
                       }
                       if (categories[current.category].formType === 'select') {
                         return Object.entries(status).map(([text, value], index) => {
-                          if (item[key as keyof DataType] !== value) return <></>
+                          if (item[key as keyof DataType] !== value) return ''
                           return (
-                            <span className={[item[key as keyof DataType] === value ? 'is-active' : '', 'status'].join(' ')}>{text}</span>
+                            <span key={index} className={[item[key as keyof DataType] === value ? 'is-active' : '', 'status'].join(' ')}>{text}</span>
                           )
                         })
                       }
